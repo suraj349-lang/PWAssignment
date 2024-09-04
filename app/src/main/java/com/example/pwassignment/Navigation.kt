@@ -12,6 +12,7 @@ import com.example.pwassignment.ui.screens.DetailsScreen
 import com.example.pwassignment.ui.screens.HomeScreen
 import com.example.pwassignment.ui.screens.SplashScreen
 import com.example.pwassignment.viewmodel.CharactersViewModel
+import com.example.pwassignment.viewmodel.DetailsViewModel
 
 sealed class SCREENS(val route:String) {
     object SPLASH : SCREENS("splash_Screen")
@@ -25,6 +26,7 @@ sealed class SCREENS(val route:String) {
 fun Navigation() {
     val navController = rememberNavController()
     val viewModel= hiltViewModel<CharactersViewModel>()
+    val detailsViewModel= hiltViewModel<DetailsViewModel>()
     NavHost(navController = navController, startDestination = SCREENS.HOME.route) {
         composable(SCREENS.SPLASH.route) {
             SplashScreen(navController)
@@ -33,14 +35,10 @@ fun Navigation() {
             HomeScreen(viewModel = viewModel, navController = navController )
 
         }
-        composable(SCREENS.DETAILS.route) {
-
-
-        }
         composable(SCREENS.DETAILS.route, arguments = listOf(navArgument("id"){type= NavType.StringType}))
         {navBackStackEntry->
             val id=navBackStackEntry.arguments?.getString("id")
-            DetailsScreen(navController = navController,id)
+            DetailsScreen( navController,id,detailsViewModel)
 
         }
     }

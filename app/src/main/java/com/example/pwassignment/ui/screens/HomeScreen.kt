@@ -53,7 +53,10 @@ fun HomeScreen(navController: NavController, viewModel: CharactersViewModel) {
     val characters = viewModel.pager.collectAsLazyPagingItems()
     val screenHeight= LocalConfiguration.current.screenHeightDp
     Scaffold(
-        topBar = { TopAppBar(title = { Text(text = "Rick and Monty", color = Color.White)}, colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color(0xFF0959A0))) },
+        topBar = { TopAppBar(title = { Text(text = "Rick and Monty", color = Color.White)}, colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color(
+            0xFF787E00
+        )
+        )) },
         content ={
             HomeScreenUI(characters,it,screenHeight){id->
                 navController.navigate("details/$id")

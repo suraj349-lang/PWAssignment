@@ -1,6 +1,7 @@
 package com.example.pwassignment.viewmodel
 
 import android.telecom.Call.Details
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -19,15 +20,16 @@ import javax.inject.Inject
 class DetailsViewModel @Inject constructor(private val repository: CharacterRepository):ViewModel() {
 
     val characterDetailsResponse: MutableState<RequestState<DetailsResponse>> = mutableStateOf(RequestState.Idle)
-    val data= MutableStateFlow(DetailsResponse())
-
-    fun getCharacterDetails(id:Int)=viewModelScope.launch(Dispatchers.IO) {
+    val data= mutableStateOf(DetailsResponse())
+    fun getCharacterDetails(id:String)=viewModelScope.launch(Dispatchers.IO) {
+        Log.d("Data", "getCharacterDetailsViewmodel: $id")
         repository.getCharacterDetails(id)
             .onStart {
                 characterDetailsResponse.value= RequestState.Loading
             }.catch {
                 characterDetailsResponse.value= RequestState.Error(it)
             }.collect{
+                Log.d("ResponseData", "getCharacterDetails:${characterDetailsResponse.value} ")
                 characterDetailsResponse.value= RequestState.Success(it)
             }
     }

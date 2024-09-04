@@ -1,5 +1,6 @@
 package com.example.pwassignment.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -17,8 +18,9 @@ import javax.inject.Inject
 @ViewModelScoped
 class CharacterRepository @Inject constructor(private val apiService: ApiService){
 
-    fun getCharacterDetails(id:Int): Flow<DetailsResponse> = flow  {
-        emit(apiService.getCharacterDetails(id))
+    fun getCharacterDetails(id:String): Flow<DetailsResponse> = flow  {
+        Log.d("Data", "getCharacterDetailsRepo: $id")
+        emit(apiService.getCharacterDetails(id.toInt()))
     }.flowOn(Dispatchers.IO)
 
 }
