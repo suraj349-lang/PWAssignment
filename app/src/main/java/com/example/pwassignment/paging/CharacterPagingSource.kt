@@ -16,11 +16,14 @@ class CharacterPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Character> {
         val page = params.key ?: 1
         return try {
-            val prev=params.key?:0
             val response = apiService.getCharactersList(page)
             if(response.isSuccessful){
-                val body=response.body()?.results
-                LoadResult.Page(data = body!!,prevKey = if(prev==0) null else 1,nextKey = if(body.size < params.loadSize) null else prev +1 )
+                val body=response.body()?.results ?: emptyList()
+                LoadResult.Page(
+                    data = body,
+                    prevKey = if(page==1) null else page-1,
+                nextKey = if(body.isEmpty()) null else page+1
+             )
             }else{
                 LoadResult.Error(Exception())
             }
@@ -34,7 +37,7 @@ class CharacterPagingSource(
 
     override fun getRefreshKey(state: PagingState<Int, Character>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1) ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+            state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 }
